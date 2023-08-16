@@ -19,7 +19,7 @@ void ELC_Lexer_init(Lexer* l, const char* input, int isfile) {
 
     if (!isfile) {
         l->filename = "<memory>";
-        ELC_Lexer_parseFromMemory(l, input);
+        ELC_Lexer_parseFromMemory(l);
     }
     else {
         assert(0 && "File lexing is not implemented yet");
@@ -45,7 +45,6 @@ Token ELC_Lexer_makeIdentifier(Lexer* l) {
 
     unsigned int startLine = l->line;
     unsigned int startPos = l->pos;
-    int exitChar = 0;
 
     while (l->curChar != '\0' && isalnum(l->curChar)) {
         idString[strlen(idString)] = l->curChar;
@@ -127,10 +126,10 @@ void ELC_Lexer_parseFromMemory(Lexer* l) {
     TokenVector_init(&tokens);
 
     assert(l->input != NULL);
-    assert(l->curChar != NULL);
+    assert(l->curChar != '\0');
 
     while (l->curChar != '\0') {
-        if (l->curChar == '\t' || l->curChar == ' ' || l->curChar == "\r") {
+        if (l->curChar == '\t' || l->curChar == ' ' || l->curChar == '\r') {
             ELC_Lexer_advance(l);
         }
         else if (isalpha(l->curChar)) {
