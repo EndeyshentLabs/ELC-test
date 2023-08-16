@@ -33,7 +33,7 @@ void TokenVector_push(TokenVector* vec, Token* token) {
 
 void TokenVector_display(TokenVector* vec) {
     for (size_t i = 0; i < vec->size; i++) {
-        printf("Token %zu: %s (line %u, col %u)\n", i, vec->tokens[i].text, vec->tokens[i].line, vec->tokens[i].col);
+        printf("Token %zu: %s (line %u, col %u, type %d)\n", i, vec->tokens[i].text, vec->tokens[i].line, vec->tokens[i].col, vec->tokens[i].type);
     }
 }
 
