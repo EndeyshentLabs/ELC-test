@@ -13,7 +13,7 @@
 void ELC_Lexer_init(Lexer* l, const char* input, int isfile) {
     l->input = input;
 
-    // assert(strlen(l->input) > 0);
+    assert(strlen(l->input) > 0);
 
     l->curChar = *l->input;
 
@@ -38,16 +38,12 @@ void ELC_Lexer_advance(Lexer* l) {
     }
 }
 
-int count = 0;
-
 Token ELC_Lexer_makeIdentifier(Lexer* l) {
-    count++;
-    assert(count < 2000);
-
     char* idString = malloc(1024);
     assert(idString != NULL && "BUY MORE RAM lol");
     memset(idString, 0, 1024);
 
+    unsigned int startLine = l->line;
     unsigned int startPos = l->pos;
     int exitChar = 0;
 
@@ -69,9 +65,7 @@ Token ELC_Lexer_makeIdentifier(Lexer* l) {
 
     printf("idString: %s\n", idString);
 
-    Token token = { .type = type, .text = idString, .line = l->line, .col = startPos };
-
-    // printf("Ended processing identifier\n");
+    Token token = { .type = type, .text = idString, .line = startLine, .col = startPos };
 
     return token;
 }
@@ -82,9 +76,10 @@ Token ELC_Lexer_makeNumber(Lexer* l) {
     memset(numStr, 0, 1024);
 
     unsigned int dotCount = 0;
+    unsigned int startLine = l->line;
     unsigned int startPos = l->pos;
 
-    while (l->curChar != '0' && (isdigit(l->curChar) || l->curChar == '.')) {
+    while (l->curChar != '\0' && (isdigit(l->curChar) || l->curChar == '.')) {
         if (l->curChar == '.') {
             if (dotCount == 1)
                 break;
@@ -96,7 +91,32 @@ Token ELC_Lexer_makeNumber(Lexer* l) {
         ELC_Lexer_advance(l);
     }
 
-    Token tok = { .type = ((dotCount == 1) ? FLOAT : INT), .text = numStr, .line = l->line, .col = startPos };
+    Token tok = { .type = ((dotCount == 1) ? FLOAT : INT), .text = numStr, .line = startLine, .col = startPos };
+
+    return tok;
+}
+
+Token ELC_Lexer_makeString(Lexer* l) {
+    char* string = malloc(1024);
+    assert(string != NULL && "BUY MORE RAM lol");
+    memset(string, 0, 1024);
+
+    unsigned int startLine = l->line;
+    unsigned int startPos = l->pos;
+
+    ELC_Lexer_advance(l);
+
+    while (l->curChar != '"') {
+        if (l->curChar == '\0') {
+            printf("%s:%d:%d: ERROR: Unclosed string.\n", l->filename, startLine + 1, startPos + 1);
+            exit(70);
+        }
+        string[strlen(string)] = l->curChar;
+
+        ELC_Lexer_advance(l);
+    }
+
+    Token tok = { .type = STRING, .text = string, .line = startLine, .col = startPos };
 
     return tok;
 }
@@ -135,26 +155,7 @@ void ELC_Lexer_parseFromMemory(Lexer* l) {
             ELC_Lexer_advance(l);
         }
         else if (l->curChar == '"') {
-            char* string = malloc(1024);
-            assert(string != NULL && "BUY MORE RAM lol");
-            memset(string, 0, 1024);
-
-            unsigned int startPos = l->pos;
-
-            ELC_Lexer_advance(l);
-
-            while (l->curChar != '"') {
-                if (l->curChar == '\0') {
-                    printf("%s:%d:%d: ERROR: Unclosed string.\n", l->filename, l->line, startPos);
-                    exit(70);
-                }
-                string[strlen(string)] = l->curChar;
-
-                ELC_Lexer_advance(l);
-            }
-
-            Token tok = { .type = STRING, .text = string, .line = l->line, .col = startPos };
-
+            Token tok = ELC_Lexer_makeString(l);
             TokenVector_push(&tokens, &tok);
             ELC_Lexer_advance(l);
         }
