@@ -1,6 +1,9 @@
 #include "Token.h"
 
 #include <stdio.h>
+#include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 
 const char* keywords[KEYWORD_COUNT] = {
     "float",
@@ -10,34 +13,30 @@ const char* keywords[KEYWORD_COUNT] = {
     "bool"
 };
 
-// Function to initialize the token vector
 void TokenVector_init(TokenVector* vec) {
     vec->size = 0;
-    vec->capacity = 10;  // Initial capacity of 10
+    vec->capacity = 10;
     vec->tokens = malloc(vec->capacity * sizeof(Token));
 }
 
-// Function to push a token to the token vector
 void TokenVector_push(TokenVector* vec, Token* token) {
-    // Check if capacity needs to be increased
+    assert(token != NULL && "Token cannot be NULL");
     if (vec->size == vec->capacity) {
-        vec->capacity *= 2;  // Double the capacity
+        vec->capacity *= 2;
         vec->tokens = realloc(vec->tokens, vec->capacity * sizeof(Token));
+        assert(vec->tokens != NULL && "BUY MORE RAM lol");
     }
     
-    // Add the token to the vector
     vec->tokens[vec->size] = *token;
     vec->size++;
 }
 
-// Function to display the contents of the token vector
 void TokenVector_display(TokenVector* vec) {
     for (size_t i = 0; i < vec->size; i++) {
-        printf("Token %zu: %s (line %u, col %u)\n", i+1, vec->tokens[i].text, vec->tokens[i].line, vec->tokens[i].col);
+        printf("Token %zu: %s (line %u, col %u)\n", i, vec->tokens[i].text, vec->tokens[i].line, vec->tokens[i].col);
     }
 }
 
-// Function to free the memory allocated by the token vector
 void TokenVector_free(TokenVector* vec) {
     free(vec->tokens);
     vec->size = 0;

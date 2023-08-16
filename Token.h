@@ -12,14 +12,18 @@ typedef enum {
     PLUS,
     MINUS,
     MULT,
-    DIV
+    DIV,
+    INT,
+    FLOAT,
+    STRING,
+    CHAR,
+    BOOL
 } TokenType;
 
 #define KEYWORD_COUNT 5
 
 extern const char* keywords[KEYWORD_COUNT];
 
-// Struct representing a token
 typedef struct {
     TokenType type;
     char* text;
@@ -27,7 +31,6 @@ typedef struct {
     unsigned int col;
 } Token;
 
-// Struct representing a vector of tokens
 typedef struct {
     Token* tokens;
     size_t size;

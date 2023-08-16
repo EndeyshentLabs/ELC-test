@@ -1,6 +1,8 @@
 CFLAGS = -Wall -Wextra -pedantic -std=c99 -g3 -O3
 CS = main.c Token.c
 
+all: main
+
 main: $(CS)
 	cc $(CFLAGS) -o main $(CS)
 
