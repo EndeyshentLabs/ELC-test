@@ -1,5 +1,5 @@
 CFLAGS = -Wall -Wextra -pedantic -std=c99 -g3 -O3
-CS = main.c Token.c
+CS = main.c Token.c Lexer.c
 
 all: main
 
