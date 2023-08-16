@@ -62,7 +62,7 @@ Token ELC_Lexer_makeIdentifier(Lexer* l) {
 
     for (size_t i = 0; i < KEYWORD_COUNT; i++) {
         if (strcmp(idString, keywords[i]) == 0) {
-            type = checkKeyword(idString);
+            type = KEYWORD;
             break;
         }
     }
@@ -167,24 +167,4 @@ void ELC_Lexer_parseFromMemory(Lexer* l) {
     TokenVector_display(&tokens);
 
     TokenVector_free(&tokens);
-}
-
-TokenType checkKeyword(const char* text) {
-    if (strcmp(text, "float") == 0) {
-        return FLOAT;
-    }
-    else if (strcmp(text, "int") == 0) {
-        return INT;
-    }
-    else if (strcmp(text, "char") == 0) {
-        return CHAR;
-    }
-    else if (strcmp(text, "bool") == 0) {
-        return BOOL;
-    }
-    else if (strcmp(text, "string") == 0) {
-        return STRING;
-    }
-
-    return KEYWORD;
 }
