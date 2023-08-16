@@ -134,11 +134,11 @@ void ELC_Lexer_parseFromMemory(Lexer* l) {
             ELC_Lexer_advance(l);
         }
         else if (isalpha(l->curChar)) {
-            Token tok = ELC_Lexer_makeIdentifier(l, l->input);
+            Token tok = ELC_Lexer_makeIdentifier(l);
             TokenVector_push(&tokens, &tok);
         }
         else if (isdigit(l->curChar)) {
-            Token tok = ELC_Lexer_makeNumber(l, l->input);
+            Token tok = ELC_Lexer_makeNumber(l);
             TokenVector_push(&tokens, &tok);
             while (isdigit(l->curChar) || l->curChar == '.') {
                 ELC_Lexer_advance(l);
