@@ -6,7 +6,7 @@
 #include "Lexer.h"
 
 int main(void) {
-    char* input = 
+    char* input =
         "float? pi = 3.1415926535898\n"
         "string str = \"Hello, World!\"";
     Lexer l = { 0 };

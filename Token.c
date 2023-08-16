@@ -26,7 +26,7 @@ void TokenVector_push(TokenVector* vec, Token* token) {
         vec->tokens = realloc(vec->tokens, vec->capacity * sizeof(Token));
         assert(vec->tokens != NULL && "BUY MORE RAM lol");
     }
-    
+
     vec->tokens[vec->size] = *token;
     vec->size++;
 }

@@ -4,13 +4,13 @@
 #include "Token.h"
 
 typedef struct {
-	const char* filename;
+    const char* filename;
 
-	unsigned int pos;
-	unsigned int line;
+    unsigned int pos;
+    unsigned int line;
 
-	const char* input;
-	char curChar;
+    const char* input;
+    char curChar;
 } Lexer;
 
 void ELC_Lexer_init(Lexer* l, const char* input, int isfile);
