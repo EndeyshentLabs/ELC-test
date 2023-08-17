@@ -4,10 +4,11 @@
 #include <stdlib.h>
 
 typedef enum {
-    IDENTIFIER,
+    IDENTIFIER = 0,
     NIL,
     NILLABLE,
-    KEYWORD,
+    KEYWORD, // Unused
+    TYPE,
     ASSIGN,
     PLUS,
     MINUS,
@@ -20,9 +21,9 @@ typedef enum {
     BOOL
 } TokenType;
 
-#define KEYWORD_COUNT 5
+#define TYPES_COUNT 5
 
-extern const char* keywords[KEYWORD_COUNT];
+extern const char* types[TYPES_COUNT];
 
 typedef struct {
     TokenType type;

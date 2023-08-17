@@ -7,8 +7,10 @@
 #include <string.h>
 
 #include "Token.h"
+#include "Parser.h"
 
 #define TODO(...) printf("%s:%d TODO: %s\n", __FILE__, __LINE__, __VA_ARGS__)
+#define PRINTF //
 
 void ELC_Lexer_init(Lexer* l, const char* input, int isfile)
 {
@@ -50,21 +52,21 @@ Token ELC_Lexer_makeIdentifier(Lexer* l)
 
     while (l->curChar != '\0' && isalnum(l->curChar)) {
         idString[strlen(idString)] = l->curChar;
-        printf("    %c\n", l->curChar);
+        PRINTF("    %c\n", l->curChar);
 
         ELC_Lexer_advance(l);
     }
 
     TokenType type = IDENTIFIER;
 
-    for (size_t i = 0; i < KEYWORD_COUNT; i++) {
-        if (strcmp(idString, keywords[i]) == 0) {
-            type = KEYWORD;
+    for (size_t i = 0; i < TYPES_COUNT; i++) {
+        if (strcmp(idString, types[i]) == 0) {
+            type = TYPE;
             break;
         }
     }
 
-    printf("idString: %s\n", idString);
+    PRINTF("idString: %s\n", idString);
 
     Token token = {
         .type = type, .text = idString, .line = startLine, .col = startPos
@@ -204,8 +206,16 @@ void ELC_Lexer_parseFromMemory(Lexer* l)
             exit(70);
         }
     }
-
+#ifdef DEBUG
     TokenVector_display(&tokens);
+#endif
+
+    ELC_parseTokenVector(tokens);
+
+    for (size_t i = 0; i < config.size; i++) {
+        printf("Config %zu (%s, %s)\n", i, config.data[i].key, config.data[i].value);
+    }
 
     TokenVector_free(&tokens);
+    Hashmap_free(&config);
 }

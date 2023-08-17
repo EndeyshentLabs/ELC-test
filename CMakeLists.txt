@@ -15,6 +15,8 @@ add_executable(
 	main.c
 	Token.c
 	Lexer.c
+	Parser.c
+	Hashmap.c
 )
 
 target_include_directories(elc-test PUBLIC .)

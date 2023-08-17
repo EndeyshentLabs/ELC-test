@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-const char* keywords[KEYWORD_COUNT] = {
+const char* types[TYPES_COUNT] = {
     "float",
     "int",
     "string",
