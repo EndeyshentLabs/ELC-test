@@ -3,18 +3,21 @@
 
 #include <stdlib.h>
 
+#include "Token.h"
+
 typedef struct {
     char* key;
     char* value;
-} StringPair;
+    TokenType type;
+} ConfigElement;
 
 typedef struct {
-    StringPair* data;
+    ConfigElement* data;
     size_t size;
     size_t capacity;
 } Hashmap;
 
 void Hashmap_init(Hashmap* array);
-void Hashmap_push(Hashmap* array, const char* key, const char* value);
+void Hashmap_push(Hashmap* array, const char* key, const char* value, TokenType type);
 
 #endif // !ELC_HASHMAP_H_1

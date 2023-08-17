@@ -213,7 +213,7 @@ void ELC_Lexer_parseFromMemory(Lexer* l)
     ELC_parseTokenVector(tokens);
 
     for (size_t i = 0; i < config.size; i++) {
-        printf("Config %zu (%s, %s)\n", i, config.data[i].key, config.data[i].value);
+        printf("Config %zu (%s, %s, %d)\n", i, config.data[i].key, config.data[i].value, config.data[i].type);
     }
 
     TokenVector_free(&tokens);

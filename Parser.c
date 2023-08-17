@@ -69,10 +69,10 @@ void ELC_parseTokenVector(TokenVector tokens)
 
             TYPE_CHECK(INT, "int")
             TYPE_CHECK(FLOAT, "float")
-            TYPE_CHECK(STRING, "string") 
+            TYPE_CHECK(STRING, "string")
             TYPE_CHECK(CHAR, "character")
 
-            Hashmap_push(&config, tokens.tokens[i - 1].text, tokens.tokens[i + 1].text);
+            Hashmap_push(&config, tokens.tokens[i - 1].text, tokens.tokens[i + 1].text, tokens.tokens[i + 1].type);
         } break;
         case INT:
         case FLOAT:

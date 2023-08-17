@@ -3,26 +3,28 @@
 #include <assert.h>
 #include <string.h>
 
+
 #define HASHMAP_CAP 32
 
 void Hashmap_init(Hashmap* array)
 {
-    array->data = malloc(HASHMAP_CAP * sizeof(StringPair));
+    array->data = malloc(HASHMAP_CAP * sizeof(ConfigElement));
     array->size = 0;
     array->capacity = HASHMAP_CAP;
 }
 
-void Hashmap_push(Hashmap* array, const char* key, const char* value)
+void Hashmap_push(Hashmap* array, const char* key, const char* value, TokenType type)
 {
     if (array->size >= array->capacity) {
         array->capacity *= 2; // Double the capacity when full
-        array->data = realloc(array->data, array->capacity * sizeof(StringPair));
+        array->data = realloc(array->data, array->capacity * sizeof(ConfigElement));
         assert(array->data != NULL && "BUY MORE RAM lol");
     }
 
-    StringPair* pair = &(array->data[array->size]);
+    ConfigElement* pair = &(array->data[array->size]);
     pair->key = strdup(key);
     pair->value = strdup(value);
+    pair->type = type;
     array->size++;
 }
 
