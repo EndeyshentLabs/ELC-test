@@ -5,10 +5,10 @@
 
 #include "Lexer.h"
 
-int main(void) {
-    char* input =
-        "float? pi = 3.1415926535898\n"
-        "string str = \"Hello, World!\"";
+int main(void)
+{
+    char* input = "float? pi = 3.1415926535898\n"
+                  "string str = \"Hello, World!\"\n";
     Lexer l = { 0 };
     ELC_Lexer_init(&l, input, 0);
 
