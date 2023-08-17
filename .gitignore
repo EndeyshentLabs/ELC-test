@@ -4,5 +4,8 @@
 *.obj
 *.a
 main
+elc-test
 /out/build/x64-Debug
 /.vs
+[Bb]uild/
+.cache/
