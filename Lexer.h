@@ -18,6 +18,7 @@ void ELC_Lexer_init(Lexer* l, const char* input, int isfile);
 void ELC_Lexer_advance(Lexer* l);
 Token ELC_Lexer_makeIdentifier(Lexer* l);
 Token ELC_Lexer_makeNumber(Lexer* l);
+Token ELC_Lexer_makeChar(Lexer* l);
 void ELC_Lexer_parseFromMemory(Lexer* l);
 
 #endif

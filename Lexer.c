@@ -132,6 +132,33 @@ Token ELC_Lexer_makeString(Lexer* l)
     return tok;
 }
 
+Token ELC_Lexer_makeChar(Lexer* l)
+{
+    char* chr = malloc(2);
+    assert(chr != NULL && "BUY MORE RAM lol");
+    memset(chr, 0, 2);
+
+    unsigned int startLine = l->line;
+    unsigned int startPos = l->pos;
+
+    ELC_Lexer_advance(l);
+
+    chr[0] = l->curChar;
+
+    ELC_Lexer_advance(l);
+
+    if (l->curChar != '\'') {
+        printf("%s:%d:%d: ERROR: Unclosed char literal.\n", l->filename,
+            startLine, startPos);
+        printf("          NOTE: Character literals are the lenght of 1.\n");
+        exit(70);
+    }
+
+    Token tok = { .type = CHAR, .text = chr, .line = l->line, .col = l->pos };
+
+    return tok;
+}
+
 void ELC_Lexer_parseFromMemory(Lexer* l)
 {
     TokenVector tokens = { 0 };
@@ -168,26 +195,8 @@ void ELC_Lexer_parseFromMemory(Lexer* l)
             TokenVector_push(&tokens, &tok);
             ELC_Lexer_advance(l);
         } else if (l->curChar == '\'') {
-            unsigned int startLine = l->line;
-            unsigned int startPos = l->pos;
-
-            ELC_Lexer_advance(l);
-
-            char chr[2] = { l->curChar, '\0' };
-
-            ELC_Lexer_advance(l);
-
-            if (l->curChar != '\'') {
-                printf("%s:%d:%d: ERROR: Unclosed char literal.\n", l->filename,
-                    startLine, startPos);
-                printf("          NOTE: Character literals are the lenght of 1.\n");
-                exit(70);
-            }
-
-            Token tok = { .type = CHAR, .text = chr, .line = l->line, .col = l->pos };
-
+            Token tok = ELC_Lexer_makeChar(l);
             TokenVector_push(&tokens, &tok);
-
             ELC_Lexer_advance(l);
         } else {
             printf("%s:%d:%d: ERROR: Unknown token. Starts with %c\n", l->filename,
