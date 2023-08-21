@@ -42,6 +42,9 @@ void TokenVector_display(TokenVector* vec)
 
 void TokenVector_free(TokenVector* vec)
 {
+    for (size_t i = 0; i < vec->size; i++) {
+        free(&*vec->tokens[i].text);
+    }
     free(vec->tokens);
     vec->size = 0;
     vec->capacity = 0;

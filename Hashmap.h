@@ -19,5 +19,6 @@ typedef struct {
 
 void Hashmap_init(Hashmap* array);
 void Hashmap_push(Hashmap* array, const char* key, const char* value, TokenType type);
+void Hashmap_free(Hashmap* array);
 
-#endif // !ELC_HASHMAP_H_1
+#endif // ELC_HASHMAP_H_

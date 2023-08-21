@@ -20,3 +20,19 @@ add_executable(
 )
 
 target_include_directories(elc-test PUBLIC .)
+
+target_compile_options(elc-test PUBLIC
+    -Wall
+    -Wextra
+    -Werror
+    -Wswitch-enum
+    -fdiagnostics-color=always
+    -pedantic
+    $<$<CONFIG:DEBUG>:-O0 -g3 -ggdb3 -DDEBUG>
+    $<$<CONFIG:RELEASE>:-O3>
+)
+
+target_link_options(elc-test PRIVATE
+    $<$<CONFIG:DEBUG>:-O0 -g3 -ggdb3>
+    $<$<CONFIG:RELEASE>:-O3>
+)

@@ -3,7 +3,6 @@
 #include <assert.h>
 #include <string.h>
 
-
 #define HASHMAP_CAP 32
 
 void Hashmap_init(Hashmap* array)
@@ -30,9 +29,9 @@ void Hashmap_push(Hashmap* array, const char* key, const char* value, TokenType 
 
 void Hashmap_free(Hashmap* array)
 {
-    // for (size_t i = 0; i < array->size; i++) {
-    //     free(array->data[i].key);
-    //     free(array->data[i].value);
-    // }
+    for (size_t i = 0; i < array->size; i++) {
+        free(array->data[i].key);
+        free(array->data[i].value);
+    }
     free(array->data);
 }

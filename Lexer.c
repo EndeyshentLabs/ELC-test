@@ -6,13 +6,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Token.h"
+#include "Hashmap.h"
 #include "Parser.h"
+#include "Token.h"
 
 #define TODO(...) printf("%s:%d TODO: %s\n", __FILE__, __LINE__, __VA_ARGS__)
-#define PRINTF //
 
-void ELC_Lexer_init(Lexer* l, const char* input, int isfile)
+#ifndef DEBUG
+#define PRINTF(...) //
+#else
+#define PRINTF printf
+#endif
+
+Hashmap* ELC_Lexer_init(Lexer* l, const char* input, int isfile)
 {
     l->input = input;
 
@@ -26,6 +32,8 @@ void ELC_Lexer_init(Lexer* l, const char* input, int isfile)
     } else {
         assert(0 && "File lexing is not implemented yet");
     }
+
+    return &config;
 }
 
 void ELC_Lexer_advance(Lexer* l)
@@ -69,8 +77,10 @@ Token ELC_Lexer_makeIdentifier(Lexer* l)
     PRINTF("idString: %s\n", idString);
 
     Token token = {
-        .type = type, .text = idString, .line = startLine, .col = startPos
+        .type = type, .text = strdup(idString), .line = startLine, .col = startPos
     };
+
+    free(idString);
 
     return token;
 }
@@ -98,9 +108,11 @@ Token ELC_Lexer_makeNumber(Lexer* l)
     }
 
     Token tok = { .type = ((dotCount == 1) ? FLOAT : INT),
-        .text = numStr,
+        .text = strdup(numStr),
         .line = startLine,
         .col = startPos };
+
+    free(numStr);
 
     return tok;
 }
@@ -128,8 +140,10 @@ Token ELC_Lexer_makeString(Lexer* l)
     }
 
     Token tok = {
-        .type = STRING, .text = string, .line = startLine, .col = startPos
+        .type = STRING, .text = strdup(string), .line = startLine, .col = startPos
     };
+
+    free(string);
 
     return tok;
 }
@@ -156,7 +170,9 @@ Token ELC_Lexer_makeChar(Lexer* l)
         exit(70);
     }
 
-    Token tok = { .type = CHAR, .text = chr, .line = l->line, .col = l->pos };
+    Token tok = { .type = CHAR, .text = strdup(chr), .line = l->line, .col = l->pos };
+
+    free(chr);
 
     return tok;
 }
@@ -184,12 +200,12 @@ void ELC_Lexer_parseFromMemory(Lexer* l)
             }
         } else if (l->curChar == '?') {
             Token tok = {
-                .type = NILLABLE, .text = "?", .line = l->line, .col = l->pos
+                .type = NILLABLE, .text = strdup("?"), .line = l->line, .col = l->pos
             };
             TokenVector_push(&tokens, &tok);
             ELC_Lexer_advance(l);
         } else if (l->curChar == '=') {
-            Token tok = { .type = ASSIGN, .text = "=", .line = l->line, .col = l->pos };
+            Token tok = { .type = ASSIGN, .text = strdup("="), .line = l->line, .col = l->pos };
             TokenVector_push(&tokens, &tok);
             ELC_Lexer_advance(l);
         } else if (l->curChar == '"') {
@@ -206,16 +222,12 @@ void ELC_Lexer_parseFromMemory(Lexer* l)
             exit(70);
         }
     }
+
 #ifdef DEBUG
     TokenVector_display(&tokens);
 #endif
 
     ELC_parseTokenVector(tokens);
 
-    for (size_t i = 0; i < config.size; i++) {
-        printf("Config %zu (%s, %s, %d)\n", i, config.data[i].key, config.data[i].value, config.data[i].type);
-    }
-
     TokenVector_free(&tokens);
-    Hashmap_free(&config);
 }
