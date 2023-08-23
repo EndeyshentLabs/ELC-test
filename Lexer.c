@@ -59,19 +59,25 @@ Token ELC_Lexer_makeIdentifier(Lexer* l)
     unsigned int startPos = l->pos;
 
     while (l->curChar != '\0' && isalnum(l->curChar)) {
+        if (l->line > startLine)
+            break;
         idString[strlen(idString)] = l->curChar;
         PRINTF("    %c\n", l->curChar);
 
         ELC_Lexer_advance(l);
     }
 
-    TokenType type = IDENTIFIER;
+    TokenType type = TOKEN_TYPE_IDENTIFIER;
 
     for (size_t i = 0; i < TYPES_COUNT; i++) {
         if (strcmp(idString, types[i]) == 0) {
-            type = TYPE;
+            type = TOKEN_TYPE_TYPE;
             break;
         }
+    }
+
+    if (strcmp(idString, "nil") == 0) {
+        type = TOKEN_TYPE_NIL;
     }
 
     PRINTF("idString: %s\n", idString);
@@ -107,7 +113,7 @@ Token ELC_Lexer_makeNumber(Lexer* l)
         ELC_Lexer_advance(l);
     }
 
-    Token tok = { .type = ((dotCount == 1) ? FLOAT : INT),
+    Token tok = { .type = ((dotCount == 1) ? TOKEN_TYPE_FLOAT : TOKEN_TYPE_INT),
         .text = strdup(numStr),
         .line = startLine,
         .col = startPos };
@@ -140,7 +146,7 @@ Token ELC_Lexer_makeString(Lexer* l)
     }
 
     Token tok = {
-        .type = STRING, .text = strdup(string), .line = startLine, .col = startPos
+        .type = TOKEN_TYPE_STRING, .text = strdup(string), .line = startLine, .col = startPos
     };
 
     free(string);
@@ -170,7 +176,7 @@ Token ELC_Lexer_makeChar(Lexer* l)
         exit(70);
     }
 
-    Token tok = { .type = CHAR, .text = strdup(chr), .line = l->line, .col = l->pos };
+    Token tok = { .type = TOKEN_TYPE_CHAR, .text = strdup(chr), .line = l->line, .col = l->pos };
 
     free(chr);
 
@@ -200,12 +206,12 @@ void ELC_Lexer_parseFromMemory(Lexer* l)
             }
         } else if (l->curChar == '?') {
             Token tok = {
-                .type = NILLABLE, .text = strdup("?"), .line = l->line, .col = l->pos
+                .type = TOKEN_TYPE_NILLABLE, .text = strdup("?"), .line = l->line, .col = l->pos
             };
             TokenVector_push(&tokens, &tok);
             ELC_Lexer_advance(l);
         } else if (l->curChar == '=') {
-            Token tok = { .type = ASSIGN, .text = strdup("="), .line = l->line, .col = l->pos };
+            Token tok = { .type = TOKEN_TYPE_ASSIGN, .text = strdup("="), .line = l->line, .col = l->pos };
             TokenVector_push(&tokens, &tok);
             ELC_Lexer_advance(l);
         } else if (l->curChar == '"') {

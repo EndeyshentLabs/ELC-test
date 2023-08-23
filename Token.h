@@ -4,22 +4,23 @@
 #include <stdlib.h>
 
 typedef enum {
-    IDENTIFIER = 0,
-    NIL,
-    NILLABLE,
-    KEYWORD, // Unused
-    TYPE,
-    ASSIGN,
-    PLUS,
-    MINUS,
-    MULT,
-    DIV,
-    INT,
-    FLOAT,
-    STRING,
-    CHAR,
-    BOOL
+    TOKEN_TYPE_IDENTIFIER = 0,
+    TOKEN_TYPE_NIL,
+    TOKEN_TYPE_NILLABLE,
+    TOKEN_TYPE_TYPE,
+    TOKEN_TYPE_ASSIGN,
+    TOKEN_TYPE_PLUS, // Unused
+    TOKEN_TYPE_MINUS, // Unused
+    TOKEN_TYPE_MULT, // Unused
+    TOKEN_TYPE_DIV, // Unused
+    TOKEN_TYPE_INT,
+    TOKEN_TYPE_FLOAT,
+    TOKEN_TYPE_STRING,
+    TOKEN_TYPE_CHAR,
+    TOKEN_TYPE_BOOL // TODO: Not implemented
 } TokenType;
+
+const char* TokenType_toString(TokenType type);
 
 #define TYPES_COUNT 5
 
