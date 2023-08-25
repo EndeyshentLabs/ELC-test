@@ -1,4 +1,5 @@
 #include "Parser.h"
+#include "Hashmap.h"
 #include "Token.h"
 
 #include <assert.h>
@@ -26,13 +27,13 @@ void ELC_parseTokenVector(TokenVector tokens)
         switch (curTok.type) {
         case TOKEN_TYPE_NILLABLE: {
             if (tokens.tokens[i - 1].type != TOKEN_TYPE_TYPE) {
-                printf("%s:%d:%d: ERROR: Expected type before `?`.\n", "<CHANGE_IT>", curTok.line, curTok.col);
+                fprintf(stderr, "%s:%d:%d: ERROR: Expected type before `?`.\n", "<CHANGE_IT>", curTok.line, curTok.col);
                 exit(71);
             }
         } break;
         case TOKEN_TYPE_TYPE: {
             if (i + 1 > tokens.size || (tokens.tokens[i + 1].type != TOKEN_TYPE_IDENTIFIER && tokens.tokens[i + 1].type != TOKEN_TYPE_NILLABLE)) {
-                printf("%s:%d:%d: ERROR: Expected `?` or identifier after type.\n", "<CHANGE_IT>", curTok.line, curTok.col);
+                fprintf(stderr, "%s:%d:%d: ERROR: Expected `?` or identifier after type.\n", "<CHANGE_IT>", curTok.line, curTok.col);
                 exit(71);
             }
         } break;
@@ -40,12 +41,12 @@ void ELC_parseTokenVector(TokenVector tokens)
             int nillable = 0;
 
             if ((int)i - 1 < 0 || tokens.tokens[i - 1].type != TOKEN_TYPE_IDENTIFIER) {
-                printf("%s:%d:%d: ERROR: Expected identifier before `=`\n", "<CHANGE_IT>", curTok.line, curTok.col);
+                fprintf(stderr, "%s:%d:%d: ERROR: Expected identifier before `=`\n", "<CHANGE_IT>", curTok.line, curTok.col);
                 exit(71);
             }
 
             if ((int)i - 2 < 0 || (tokens.tokens[i - 1].type != TOKEN_TYPE_NILLABLE && tokens.tokens[i - 1].type != TOKEN_TYPE_IDENTIFIER)) {
-                printf("%s:%d:%d: ERROR: Identifier or nillable qualifier(`?`) before `=`\n", "<CHANGE_IT>", curTok.line, curTok.col);
+                fprintf(stderr, "%s:%d:%d: ERROR: Identifier or nillable qualifier(`?`) before `=`\n", "<CHANGE_IT>", curTok.line, curTok.col);
                 exit(71);
             }
             if (tokens.tokens[i - 2].type == TOKEN_TYPE_NILLABLE) {
@@ -55,7 +56,7 @@ void ELC_parseTokenVector(TokenVector tokens)
             if (i + 1 > tokens.size
                 || ((tokens.tokens[i + 1].type != TOKEN_TYPE_INT && tokens.tokens[i + 1].type != TOKEN_TYPE_FLOAT && tokens.tokens[i + 1].type != TOKEN_TYPE_CHAR && tokens.tokens[i + 1].type != TOKEN_TYPE_STRING && tokens.tokens[i + 1].type != TOKEN_TYPE_BOOL)
                     && (nillable && tokens.tokens[i + 1].type != TOKEN_TYPE_NIL))) {
-                printf("%s:%d:%d: ERROR: Expected data litaral after `=` but got `%s`\n", "<CHANGE_IT>", curTok.line, curTok.col, tokens.tokens[i + 1].text);
+                fprintf(stderr, "%s:%d:%d: ERROR: Expected data litaral after `=` but got `%s`\n", "<CHANGE_IT>", curTok.line, curTok.col, tokens.tokens[i + 1].text);
                 exit(71);
             }
 
@@ -77,6 +78,14 @@ void ELC_parseTokenVector(TokenVector tokens)
             TYPE_CHECK(TOKEN_TYPE_NIL, "nil")
 
             free(text);
+
+            for (size_t i = 0; i < config.size; i++) {
+                if (strcmp(config.data[i].key, tokens.tokens[i - 1].text) == 0) {
+                    fprintf(stderr, "%s:%d:%d: ERROR: Variable with that name already exists!\n", "<CHANGE_IT>", curTok.line, curTok.col);
+                    Hashmap_free(&config);
+                    exit(71);
+                }
+            }
 
             Hashmap_push(&config, tokens.tokens[i - 1].text, tokens.tokens[i + 1].text, tokens.tokens[i + 1].type);
         } break;
