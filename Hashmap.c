@@ -1,7 +1,6 @@
 #include "Hashmap.h"
 
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
 
 #define HASHMAP_CAP 32
@@ -15,13 +14,6 @@ void Hashmap_init(Hashmap* array)
 
 void Hashmap_push(Hashmap* array, const char* key, const char* value, TokenType type)
 {
-    for (size_t i = 0; i < array->size; i++) {
-        if (strcmp(array->data[i].key, key) == 0) {
-            fprintf(stderr, "ERROR: element with that name is present in the hashmap!\n");
-            Hashmap_free(array);
-            exit(60);
-        }
-    }
     if (array->size >= array->capacity) {
         array->capacity *= 2; // Double the capacity when full
         array->data = realloc(array->data, array->capacity * sizeof(ConfigElement));
