@@ -53,7 +53,7 @@ void ELC_parseTokenVector(TokenVector tokens)
             }
 
             if (i + 1 > tokens.size
-                || ((tokens.tokens[i + 1].type != TOKEN_TYPE_INT && tokens.tokens[i + 1].type != TOKEN_TYPE_FLOAT && tokens.tokens[i + 1].type != TOKEN_TYPE_CHAR && tokens.tokens[i + 1].type != TOKEN_TYPE_STRING)
+                || ((tokens.tokens[i + 1].type != TOKEN_TYPE_INT && tokens.tokens[i + 1].type != TOKEN_TYPE_FLOAT && tokens.tokens[i + 1].type != TOKEN_TYPE_CHAR && tokens.tokens[i + 1].type != TOKEN_TYPE_STRING && tokens.tokens[i + 1].type != TOKEN_TYPE_BOOL)
                     && (nillable && tokens.tokens[i + 1].type != TOKEN_TYPE_NIL))) {
                 printf("%s:%d:%d: ERROR: Expected data litaral after `=` but got `%s`\n", "<CHANGE_IT>", curTok.line, curTok.col, tokens.tokens[i + 1].text);
                 exit(71);
@@ -73,6 +73,7 @@ void ELC_parseTokenVector(TokenVector tokens)
             TYPE_CHECK(TOKEN_TYPE_FLOAT, "float")
             TYPE_CHECK(TOKEN_TYPE_STRING, "string")
             TYPE_CHECK(TOKEN_TYPE_CHAR, "character")
+            TYPE_CHECK(TOKEN_TYPE_BOOL, "bool")
             TYPE_CHECK(TOKEN_TYPE_NIL, "nil")
 
             free(text);

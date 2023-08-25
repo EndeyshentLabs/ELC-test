@@ -78,6 +78,8 @@ Token ELC_Lexer_makeIdentifier(Lexer* l)
 
     if (strcmp(idString, "nil") == 0) {
         type = TOKEN_TYPE_NIL;
+    } else if (strcmp(idString, "true") == 0 || strcmp(idString, "false") == 0) {
+        type = TOKEN_TYPE_BOOL;
     }
 
     PRINTF("idString: %s\n", idString);

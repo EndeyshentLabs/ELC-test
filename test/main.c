@@ -9,7 +9,9 @@ int main(void)
     char* input = "float? pi = 3.1415926535898\n"
                   "int? a = nil\n"
                   "string str = \"Hello, World!\"\n"
-                  "char chr = 's'";
+                  "char chr = 's'\n"
+                  "bool is = true\n"
+                  "bool not = false";
     Lexer l = { 0 };
     Hashmap* config = ELC_Lexer_init(&l, input, 0);
     assert(config != NULL);
