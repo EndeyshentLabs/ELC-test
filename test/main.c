@@ -2,9 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Hashmap.h"
-#include "Lexer.h"
-#include "Token.h"
+#include "../Lexer.h"
 
 int main(void)
 {
